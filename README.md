@@ -22,3 +22,11 @@ Data processing pipeline. The final dataset comprises over 100,000 hours of high
 | in USD   | $30K   | $19.2K| $1.34K | $50.54K |
 
 Traning costs of Muyan-TTS, assuming the rental price of A10 and A100 in GPU hour is $0.5 and $1, respectively.
+
+## Install
+
+## Acknowledgment
+
+We borrowed a lot of code from [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
+
+We borrowed a lot of code from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
