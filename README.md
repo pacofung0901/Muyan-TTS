@@ -2,11 +2,23 @@
 
 ## Highlight
 
-Muyan-TTS is a trainable TTS model designed for podcast applications within a $50,000 budget, which is pretrained on over 100,000 hours of podcast audio data, enabling zero-shot TTS synthesis with high-quality voice generation. Furthermore, Muyan-TTS supports speaker adaptation with dozens of minutes of target speech, making it highly customizable for individual voices. Muyan-TTS makes the following four key contributions:
+Muyan-TTS is a trainable TTS model designed for podcast applications within a $50,000 budget, which is pre-trained on over 100,000 hours of podcast audio data, enabling zero-shot TTS synthesis with high-quality voice generation. Furthermore, Muyan-TTS supports speaker adaptation with dozens of minutes of target speech, making it highly customizable for individual voices. Muyan-TTS makes the following four key contributions:
 - **Open-sourcing two TTS models**: (i) a base model pre-trained on diverse podcast datasets, enabling zero-shot TTS synthesis, and (ii) a supervised fine-tuned (SFT) model trained on an individual speaker to enhance TTS performance.
 - **Providing a detailed training methodology**: outlines the end-to-end training procedure, from the base model to speaker-specific adaptation, and release the full training code for public use.
 - **Introducing a data processing pipeline**: proposes a comprehensive workflow for data collection, preprocessing, and formatting tailored to TTS model training, improving efficiency and reproducibility.
 - **Optimizing inference efficiency**: develops an accelerated TTS inference framework, particularly optimizing the LLM component for faster and more efficient speech generation.
 
-## Architecture
-Muyan-TTS
+## Summary
+
+![Framework](assets/framework.png)
+Framework of Muyan-TTS. Left is an LLM that models the parallel corpus of text (in purple) and audio (in green) tokens. Right is a SoVITS model that decodes the generated audio tokens, as well as phonemes and speaker embeddings, into the audio waveform.
+
+![Pipeline](assets/pipeline.png)
+Data processing pipeline. The final dataset comprises over 100,000 hours of high-quality speech and corresponding transcriptions, forming a robust parallel corpus suitable for TTS training in long-form audio scenarios such as podcasts.
+
+| Training Cost   | Data Processing   | Pre-training of LLM| Training of Decoder | Total |
+|-------|-------|-------|-------|-------|
+| in GPU Hours   | 60K(A10)   | 19.2K(A100)| 1.34K(A100) | - |
+| in USD   | $30K   | $19.2K| $1.34K | $50.54K |
+
+Traning costs of Muyan-TTS, assuming the rental price of A10 and A100 in GPU hour is $0.5 and $1, respectively.
