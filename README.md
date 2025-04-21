@@ -7,3 +7,5 @@ Muyan-TTS is a trainable TTS model designed for podcast applications within a $5
 - **Providing a detailed training methodology**: outlines the end-to-end training procedure, from the base model to speaker-specific adaptation, and release the full training code for public use.
 - **Introducing a data processing pipeline**: proposes a comprehensive workflow for data collection, preprocessing, and formatting tailored to TTS model training, improving efficiency and reproducibility.
 - **Optimizing inference efficiency**: develops an accelerated TTS inference framework, particularly optimizing the LLM component for faster and more efficient speech generation.
+
+## Architecture
