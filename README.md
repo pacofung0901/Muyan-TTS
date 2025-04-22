@@ -24,9 +24,7 @@ Data processing pipeline. The final dataset comprises over 100,000 hours of high
 Training costs of Muyan-TTS, assuming the rental price of A10 and A100 in GPU hour is $0.5 and $1, respectively.
 
 ## Demo
-<audio controls>
-  <source src="./assets/demo1.wav" type="audio/wav">
-</audio>
+[Demo1](https://github.com/MYZY-AI/Muyan-TTS/blob/main/assets/demo1.wav)
 
 <audio controls>
   <source src="./assets/demo2.wav" type="audio/wav">
