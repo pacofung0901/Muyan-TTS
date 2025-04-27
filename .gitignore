@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+pretrained_models/*
+logs/*
+*.pt
+*.pth
+data_process/*.list
+data_process/*.tsv
+data_process/*.txt
+data_process/*.json
+third_party
+data/*
+llama-factory
