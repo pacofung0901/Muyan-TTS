@@ -10,8 +10,8 @@ Muyan-TTS is a trainable TTS model designed for podcast applications within a $5
 
 * April 28, 2025: 👋 We release the zero-shot TTS model weights of [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS).
 * April 28, 2025: 👋 We release the few-shot TTS model weights of [Muyan-TTS-SFT](https://huggingface.co/MYZY-AI/Muyan-TTS-SFT), which is trained based on [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS) with dozens of minutes of a single speaker's speech.
-* We release the training code from the base model to the SFT model for speaker adaptation.
-* We release the [technical report]() of Muyan-TTS.
+* April 28, 2025: 👋 We release the training code from the base model to the SFT model for speaker adaptation.
+* April 28, 2025: 👋 We release the [technical report]() of Muyan-TTS.
 
 ## Summary
 
