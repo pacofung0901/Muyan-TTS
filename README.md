@@ -1,4 +1,6 @@
-# Muyan-TTS
+<p align="center">
+    <img src="assets/logo.png" width="400"/>
+<p>
 
 <p align="center">
 Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp; | &nbsp;<a href="">Technical Report</a> &nbsp;&nbsp;
