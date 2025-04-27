@@ -3,11 +3,12 @@ import time
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
+import os
 from fastapi import FastAPI, HTTPException
 from typing import Optional
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
-
+import uvicorn
 from inference.inference import Inference
 
 # 提供 Web API 的方式来调用 TTS 模型
@@ -15,9 +16,8 @@ from inference.inference import Inference
 
 # web server 端口号
 TTS_PORT=8020
-
 app = FastAPI()
-tts = Inference("sft", "pretrained_models/Muyan-TTS-SFT", enable_vllm_acc=True)
+
 
 class TTSRequest(BaseModel):
     ref_wav_path: str
@@ -51,7 +51,27 @@ async def get_tts(request_data: TTSRequest):
 
 
 if __name__ == "__main__":
-    import uvicorn
+    from modelscope import snapshot_download
+    model_type = "base"
+    model_path = "pretrained_models/Muyan-TTS"
+    cnhubert_model_path = "pretrained_models/chinese-hubert-base"
+    try:
+        snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
+        snapshot_download('pengzhendong/chinese-hubert-base', local_dir=cnhubert_model_path)
+        print(f"Model downloaded successfully to {model_path}")
+    except Exception as e:
+        print(f"Error downloading model: {str(e)}")
+    tts = Inference(model_type, model_path, enable_vllm_acc=True)
+
+    # Or you can try to install from huggingface
+    # from huggingface_hub import snapshot_download
+    # try:
+    #     snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
+    #     snapshot_download('TencentGameMate/chinese-hubert-base', local_dir=cnhubert_model_path)
+    #     print(f"Model downloaded successfully to {model_path}")
+    # except Exception as e:
+    #     print(f"Error downloading model: {str(e)}")
+    
     uvicorn.run(app, host="0.0.0.0", port=TTS_PORT)
     
     
