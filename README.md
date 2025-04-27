@@ -53,29 +53,81 @@ Model Download
 | Muyan-TTS   | [huggingface](https://huggingface.co/MYZY-AI/Muyan-TTS) \| [modelscope](https://modelscope.cn/models/MYZY-AI/Muyan-TTS)   |
 | Muyan-TTS-SFT   | [huggingface](https://huggingface.co/MYZY-AI/Muyan-TTS-SFT) \| [modelscope](https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT)   |
 
-Using Muyan-TTS as an example:
+
+## Quickstart
 ```py
-from modelscope import snapshot_download
-model_path = "pretrained_models/Muyan-TTS"
-cnhubert_model_path = "pretrained_models/chinese-hubert-base"
-try:
-    snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
-    snapshot_download('pengzhendong/chinese-hubert-base', local_dir=cnhubert_model_path)
-    print(f"Model downloaded successfully to {model_path}")
-except Exception as e:
-    print(f"Error downloading model: {str(e)}")
-    
-    
-# Or you can try to install from huggingface
-from huggingface_hub import snapshot_download
-try:
-    snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
-    snapshot_download('TencentGameMate/chinese-hubert-base', local_dir=cnhubert_model_path)
-    print(f"Model downloaded successfully to {model_path}")
-except Exception as e:
-    print(f"Error downloading model: {str(e)}")
+python tts.py
 ```
-To download Muyan-TTS-SFT, simply replace Muyan-TTS with Muyan-TTS-SFT in model_path and repo_id.
+This will automatically download the ```Muyan-TTS model``` (if not already downloaded) and synthesize speech through inference. The core code is as follows:
+```py
+async def main(model_type, model_path):
+    tts = Inference(model_type, model_path, enable_vllm_acc=False)
+    wavs = await tts.generate(
+        ref_wav_path="assets/Claire.wav",
+        prompt_text="Although the campaign was not a complete success, it did provide Napoleon with valuable experience and prestige.",
+        text="Welcome to the captivating world of podcasts, let's embark on this exciting journey together."
+    )
+    output_path = "logs/tts.wav"
+    with open(output_path, "wb") as f:
+        f.write(next(wavs))  
+    print(f"Speech generated in {output_path}")
+```
+We need to specify the ```prompt speech```, its ```prompt text```, and the ```text``` to be synthesized. The synthesized speech is saved by default to ```logs/tts.wav```.
+
+Additionally, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```.
+
+## API Usage
+```py
+python api.py
+```
+Using the API mode automatically enables VLLM acceleration, and the above command will start a service on the default port ```8020```. Additionally, LLM logs will be saved in ```logs/llm.log```.
+
+You can send a request to the API using the example below:
+```py
+import time
+import requests
+TTS_PORT=8020
+payload = {
+    "ref_wav_path": "assets/Claire.wav",
+    "prompt_text": "Although the campaign was not a complete success, it did provide Napoleon with valuable experience and prestige.",
+    "text": "Welcome to the captivating world of podcasts, let's embark on this exciting journey together."
+}
+start = time.time()
+
+url = f"http://localhost:{TTS_PORT}/get_tts"
+response = requests.post(url, json=payload)
+audio_file_path = "logs/tts.wav"
+with open(audio_file_path, "wb") as f:
+    f.write(response.content)
+    
+print(time.time() - start)
+```
+
+By default, the synthesized speech will be saved at ```logs/tts.wav```.
+
+Additionally, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```.
+
+## Training
+
+We use ```LibriSpeech``` as an example. You can use your own dataset instead, but you need to organize the data into the format shown in ```data_process/examples```.
+
+If you haven't downloaded ```LibriSpeech``` yet, you can download the dev-clean set using:
+```sh
+wget https://www.openslr.org/resources/12/dev-clean.tar.gz -P /path/to/save
+```
+After downloading, specify the ```librispeech_dir``` in ```prepare_sft_dataset.py``` to match the download location. Then run ```./train.sh```, which will automatically process the data and generate ```data/tts_sft_data.json```.
+
+Note that if an error occurs during the process, resolve the error, delete the existing contents of the data folder, and then rerun ```train.sh```.
+
+After generating ```data/tts_sft_data.json```, train.sh will automatically copy it to ```llama-factory/data``` and add the following field to ```dataset_info.json```:
+```json
+"tts_sft_data": {
+    "file_name": "tts_sft_data.json"
+}
+```
+Finally, it will automatically execute the ```llamafactory-cli train``` command to start training. You can adjust training settings using ```training/sft.yaml```. By default, the trained weights will be saved to ```pretrained_models/Muyan-TTS-new-SFT```.
+
+The SFT model requires the ```model_type``` to be set to ```sft```.
 
 ## Acknowledgment
 
