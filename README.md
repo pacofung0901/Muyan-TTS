@@ -47,7 +47,7 @@ conda activate muyan-tts
 make build
 ```
 
-Model Download
+Model Download (optional)
 | Models   | Links   |
 |-------|-------|
 | Muyan-TTS   | [huggingface](https://huggingface.co/MYZY-AI/Muyan-TTS) \| [modelscope](https://modelscope.cn/models/MYZY-AI/Muyan-TTS)   |
