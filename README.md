@@ -45,7 +45,11 @@ conda activate muyan-tts
 make build
 ```
 
-Model Download (Optional, as the model is automatically detected and downloaded during direct inference or API usage)
+Model Download
+| Models   | Links   |
+|-------|-------|
+| Muyan-TTS   | [huggingface](https://huggingface.co/MYZY-AI/Muyan-TTS) \| [modelscope](https://modelscope.cn/models/MYZY-AI/Muyan-TTS)   |
+| Muyan-TTS-SFT   | [huggingface](https://huggingface.co/MYZY-AI/Muyan-TTS-SFT) \| [modelscope](https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT)   |
 
 Using Muyan-TTS as an example:
 ```py
