@@ -13,7 +13,7 @@ python "$SCRIPT_DIR/prepare_sft_dataset.py"
 
 # Copy data to llama-factory
 echo "Copying dataset to llama-factory..."
-cp "$DATA_DIR/tts_sft_data.json" "$LLAMA_DATA_DIR/"
+cp "$LLAMA_DATA_DIR/dataset_info.json" "$DATA_DIR"
 
 # Update dataset info
 echo "Updating dataset info..."

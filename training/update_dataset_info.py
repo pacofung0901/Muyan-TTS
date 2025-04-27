@@ -1,7 +1,7 @@
 import json
 import os
 
-def update_dataset_info(json_path="llama-factory/data/dataset_info.json", 
+def update_dataset_info(json_path="data/dataset_info.json", 
                         new_entry = {
                             "tts_sft_data": {
                                 "file_name": "tts_sft_data.json"
@@ -30,7 +30,7 @@ def update_dataset_info(json_path="llama-factory/data/dataset_info.json",
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 if __name__ == "__main__":
-    json_path = "llama-factory/data/dataset_info.json"
+    json_path = "data/dataset_info.json"
 
     new_entry = {
         "tts_sft_data": {
