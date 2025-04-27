@@ -73,6 +73,8 @@ To download Muyan-TTS-SFT, simply replace Muyan-TTS with Muyan-TTS-SFT in model_
 
 ## Acknowledgment
 
-We borrowed a lot of code from [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
+The model is trained base on [Llama-3.2-3B](https://huggingface.co/meta-llama/Llama-3.2-3B).
 
-We borrowed a lot of code from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
+We borrow a lot of code from [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
+
+We borrow a lot of code from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
