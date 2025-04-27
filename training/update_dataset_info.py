@@ -8,32 +8,30 @@ def update_dataset_info(json_path="llama-factory/data/dataset_info.json",
                         }}
                         ):
     """
-    读取 JSON 文件，添加新条目并保存。
+    Reads a JSON file, adds a new entry, and saves it.
     
     Args:
-        json_path (str): JSON 文件路径
-        new_entry (dict): 要添加的新条目
+        json_path (str): Path to the JSON file
+        new_entry (dict): New entry to be added
     """
-    # 确保文件存在
+    # Ensure the file exists
     if not os.path.exists(json_path):
         raise FileNotFoundError(f"JSON file not found at: {json_path}")
 
-    # 读取 JSON 文件
+    # Read the JSON file
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    # 添加新条目
+    # Add the new entry
     data.update(new_entry)
 
-    # 保存回文件
+    # Save back to the file
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 if __name__ == "__main__":
-    # 文件路径
     json_path = "llama-factory/data/dataset_info.json"
-    
-    # 新条目
+
     new_entry = {
         "tts_sft_data": {
             "file_name": "tts_sft_data.json"

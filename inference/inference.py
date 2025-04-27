@@ -13,14 +13,14 @@ class Inference():
                  model_type, model_path, ref_wav_path="assets/Claire.wav", 
                  prompt_text="Although the campaign was not a complete success, it did provide Napoleon with valuable experience and prestige.",
                  enable_vllm_acc=False):
-        # 此处的ref_wav_path和prompt_text仅用于初始化sovits（否则会第一次会很慢），后续仍然可以用cal_tts来指定新的ref_wav_path和prompt_text
-        logging.info("initializing vits...")
+        # ref_wav_path and prompt_text are used here only to initialize sovits (otherwise the first run would be slow)
+        # new ref_wav_path and prompt_text can still be specified later using call_tts
         self.sovits_processor = Processor(sovits_path=os.path.join(model_path, "sovits.pth"))
         self.sovits_processor.generate_audio_token(ref_wav_path)
-        clean_text_inf_normed_text(prompt_text, 'en', 'v1') # 文本清洗
+        clean_text_inf_normed_text(prompt_text, 'en', 'v1') 
         logging.info("init vits finish")
 
-        # 此处用于区分是api模式还是普通tts模式
+        # Used to distinguish between API mode and regular TTS mode
         self.enable_vllm_acc = enable_vllm_acc
         if self.enable_vllm_acc == True:
             from inference.inference_llama import InferenceLlamaVllm
@@ -49,7 +49,7 @@ class Inference():
         prompt_text = get_normed_text(prompt_text, 'en', 'v1')
         text = get_normed_text(text, 'en', 'v1')
         
-        # 用于处理太长的句子,切分成多句短句子
+        # Used to handle overly long sentences by splitting them into multiple shorter sentences
         batch_texts = clean_and_split_text(text)
         batch_texts = merge_sentences_minimum_n(batch_texts, MIN_SENTENCE_LENGTH) 
         
@@ -72,7 +72,7 @@ class Inference():
     def init_vits(self, ref_wav_path, prompt_text):
         logging.info("init vits...")
         self.sovits_processor.generate_audio_token(ref_wav_path)
-        clean_text_inf_normed_text(prompt_text, 'en', 'v1') # 文本清洗
+        clean_text_inf_normed_text(prompt_text, 'en', 'v1') 
         logging.info("init vits finish")
 
 

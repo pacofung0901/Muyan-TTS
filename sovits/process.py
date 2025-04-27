@@ -10,13 +10,9 @@ import logging
 from sovits.utils import *
 import sovits.cnhubert as cnhubert
 
-# 创建一个新的模块对象
 utils_module = types.ModuleType('utils')
-# 从 sovits.utils 导入 HParams
 from sovits.utils import HParams
-# 将 HParams 设置为 utils 模块的属性
 setattr(utils_module, 'HParams', HParams)
-# 将新模块注入到 sys.modules
 sys.modules['utils'] = utils_module
 
 class Speaker:
@@ -78,9 +74,7 @@ class Processor:
         cnhubert_path="pretrained_models/chinese-hubert-base",
         default_cut_punc="",
     ):
-        # 避免重复初始化
         if not Processor._initialized:
-            # 初始化代码
             self.spec_cache = {}
             self.speaker_list = {}
             self.audio_token_cache = {}
@@ -90,17 +84,17 @@ class Processor:
             self.is_half = is_half
             self.default_cut_punc = default_cut_punc
 
-            # 设置 sovits 模型路径
+            # set sovits path
             if sovits_path is not None:
                 self.sovits_path = sovits_path
             else:
                 raise FileNotFoundError("No valid sovits.pth found.")
 
-            # 加载 sovits 模型
+            # load sovits model
             sovits = self.get_sovits_weights(self.sovits_path, self.device)
             self.speaker_list["default"] = Speaker(name="default", sovits=sovits)
 
-            # 加载 cnhubert 模型
+            # load cnhubert model
             cnhubert.cnhubert_base_path = cnhubert_path
             ssl_model = cnhubert.get_model()
             if self.is_half:
@@ -108,7 +102,6 @@ class Processor:
             else:
                 self.ssl_model = ssl_model.to(self.device)
 
-            # 标记为已初始化
             Processor._initialized = True
 
     def generate_audio_token(self, ref_wav_path, spk="default"):
@@ -138,12 +131,11 @@ class Processor:
                 "last_hidden_state"
             ].transpose(
                 1, 2
-            )  # .float()
+            )  
             codes = vq_model.extract_latent(ssl_content)
             prompt_semantic = codes[0, 0]
             prompt = prompt_semantic.unsqueeze(0).to(self.device)
             
-            # 由vq生成的code
             audio_token = tensor_to_audio_tokens(prompt)
             self.audio_token_cache[ref_wav_path] = audio_token
             return audio_token
@@ -157,7 +149,6 @@ class Processor:
             hps.model.version = "v1"
         else:
             hps.model.version = "v2"
-        logging.info(f"模型版本: {hps.model.version}")
         model_params_dict = vars(hps.model)
         vq_model = SynthesizerTrn(
             hps.data.filter_length // 2 + 1,
@@ -204,7 +195,6 @@ class Processor:
 
         splits = {"，", "。", "？", "！", ",", ".", "?", "!", "~", ":", "：", "—", "…", }
         for text in texts:
-            # 简单防止纯符号引发参考音频泄露
             if only_punc(text):
                 continue
 
@@ -215,7 +205,6 @@ class Processor:
             for item in re.findall(r"<\|.+?\|>", predict):
                 if item == "<|eot_id|>" or item == "<|audio_token_end|>":
                     continue
-                #    break
                 pred_token.append(int(item.split("_")[-1].split("|>")[0]))
             pred_semantic = torch.LongTensor(pred_token).to(self.device).unsqueeze(0).unsqueeze(0)
             audio = vq_model.decode(pred_semantic, torch.LongTensor(phones2).to(self.device).unsqueeze(0),
@@ -223,7 +212,7 @@ class Processor:
             max_audio=np.abs(audio).max()
             if max_audio>1:
                 audio /= max_audio
-            audio *= scaling_factor  # 放大音量
+            audio *= scaling_factor  # adjust volumn
             audio = np.clip(audio, -1.0, 1.0)
             audio_opt.append(audio)
             audio_opt.append(zero_wav)

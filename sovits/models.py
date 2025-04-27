@@ -18,7 +18,6 @@ from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
 from sovits.module.commons import init_weights, get_padding
 from sovits.module.mrte_model import MRTE
 from sovits.module.quantize import ResidualVectorQuantizer
-# from text import symbols
 from sovits.text import symbols as symbols_v1
 from sovits.text import symbols2 as symbols_v2
 from torch.cuda.amp import autocast
@@ -36,7 +35,7 @@ class StochasticDurationPredictor(nn.Module):
         gin_channels=0,
     ):
         super().__init__()
-        filter_channels = in_channels  # it needs to be removed from future version.
+        filter_channels = in_channels  
         self.in_channels = in_channels
         self.filter_channels = filter_channels
         self.kernel_size = kernel_size
@@ -121,10 +120,10 @@ class StochasticDurationPredictor(nn.Module):
                 torch.sum(0.5 * (math.log(2 * math.pi) + (z**2)) * x_mask, [1, 2])
                 - logdet_tot
             )
-            return nll + logq  # [b]
+            return nll + logq  
         else:
             flows = list(reversed(self.flows))
-            flows = flows[:-2] + [flows[-1]]  # remove a useless vflow
+            flows = flows[:-2] + [flows[-1]]  
             z = (
                 torch.randn(x.size(0), 2, x.size(2)).to(device=x.device, dtype=x.dtype)
                 * noise_scale
@@ -242,9 +241,9 @@ class TextEncoder(nn.Module):
             y.dtype
         )
 
-        y = self.ssl_proj(y * y_mask) * y_mask # conv1d
+        y = self.ssl_proj(y * y_mask) * y_mask 
      
-        y = self.encoder_ssl(y * y_mask, y_mask) # 某种transformer
+        y = self.encoder_ssl(y * y_mask, y_mask) 
 
         text_mask = torch.unsqueeze(
             commons.sequence_mask(text_lengths, text.size(1)), 1
@@ -252,15 +251,14 @@ class TextEncoder(nn.Module):
         if test == 1:
             text[:, :] = 0
         text = self.text_embedding(text).transpose(1, 2)
-        text = self.encoder_text(text * text_mask, text_mask) # 显而易见
-        y = self.mrte(y, y_mask, text, text_mask, ge) # 某个cross attn，毕竟输入是语音和text
-        y = self.encoder2(y * y_mask, y_mask) # 某种transformer
+        text = self.encoder_text(text * text_mask, text_mask) 
+        y = self.mrte(y, y_mask, text, text_mask, ge) 
+        y = self.encoder2(y * y_mask, y_mask) 
         if(speed!=1):
             y = F.interpolate(y, size=int(y.shape[-1] / speed)+1, mode="linear")
             y_mask = F.interpolate(y_mask, size=y.shape[-1], mode="nearest")
         stats = self.proj(y) * y_mask
-        m, logs = torch.split(stats, self.out_channels, dim=1) # out_channels = 192，原本stats是384维度的，相当于对半切开
-        # mean， logs分别对应平均值和对数方差，用于后面的flow
+        m, logs = torch.split(stats, self.out_channels, dim=1) 
         return y, m, logs, y_mask
 
     def extract_latent(self, x):
@@ -463,15 +461,15 @@ class Generator(torch.nn.Module):
             self.cond = nn.Conv1d(gin_channels, upsample_initial_channel, 1)
 
     def forward(self, x, g=None):
-        x = self.conv_pre(x) # conv
+        x = self.conv_pre(x)
         if g is not None:
             x = x + self.cond(g)
 
         for i in range(self.num_upsamples):
             x = F.leaky_relu(x, modules.LRELU_SLOPE)
-            x = self.ups[i](x) # 反卷积
+            x = self.ups[i](x) 
             xs = None
-            for j in range(self.num_kernels):  # resconv
+            for j in range(self.num_kernels):  
                 if xs is None:
                     xs = self.resblocks[i * self.num_kernels + j](x)
                 else:
@@ -652,7 +650,6 @@ class ReferenceEncoder(nn.Module):
             for i in range(K)
         ]
         self.convs = nn.ModuleList(convs)
-        # self.wns = nn.ModuleList([weight_norm(num_features=ref_enc_filters[i]) for i in range(K)])
 
         out_channels = self.calculate_channels(spec_channels, 3, 2, 1, K)
         self.gru = nn.GRU(
@@ -897,7 +894,6 @@ class SynthesizerTrn(nn.Module):
             inter_channels, hidden_channels, 5, 1, 4, gin_channels=gin_channels
         )
 
-        # self.version=os.environ.get("version","v1")
         if(self.version=="v1"):
             self.ref_enc = modules.MelStyleEncoder(spec_channels, style_vector_dim=gin_channels)
         else:
@@ -1015,9 +1011,9 @@ class SynthesizerTrn(nn.Module):
             quantized = F.interpolate(
                 quantized, size=int(quantized.shape[-1] * 2), mode="nearest"
             )
-        x, m_p, logs_p, y_mask = self.enc_p( # text encoder 想要生成的text的phoneme
+        x, m_p, logs_p, y_mask = self.enc_p(
             quantized, y_lengths, text, text_lengths, ge,speed
-        ) # mean， logs分别对应平均值和对数方差，用于后面的flow
+        ) 
         z_p = m_p + torch.randn_like(m_p) * torch.exp(logs_p) * noise_scale
 
         z = self.flow(z_p, y_mask, g=ge, reverse=True)
@@ -1026,6 +1022,6 @@ class SynthesizerTrn(nn.Module):
         return o
 
     def extract_latent(self, x):
-        ssl = self.ssl_proj(x) # conv1d
+        ssl = self.ssl_proj(x) 
         quantized, codes, commit_loss, quantized_list = self.quantizer(ssl)
         return codes.transpose(0, 1)

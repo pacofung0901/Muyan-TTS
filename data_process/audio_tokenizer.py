@@ -11,13 +11,9 @@ from sovits.utils import clean_path
 logging.getLogger("numba").setLevel(logging.WARNING)
 
 import types
-# 创建一个新的模块对象
 utils_module = types.ModuleType('utils')
-# 从 sovits.utils 导入 HParams
 from sovits.utils import HParams
-# 将 HParams 设置为 utils 模块的属性
 setattr(utils_module, 'HParams', HParams)
-# 将新模块注入到 sys.modules
 sys.modules['utils'] = utils_module
 
 def audio_tokenizer(input_dir = "data",
@@ -74,13 +70,10 @@ def audio_tokenizer(input_dir = "data",
 
         lines1 = []
         for line in lines:
-            # print(line)
             try:
-                # wav_name,text=line.split("\t")
                 wav_name, spk_name, language, text = line.split("|")
                 wav_name=clean_path(wav_name)
                 wav_name = os.path.basename(wav_name)
-                # name2go(name,lines1)
                 name2go(wav_name, lines1)
             except:
                 print(line, traceback.format_exc())

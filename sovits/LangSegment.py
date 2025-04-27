@@ -60,14 +60,13 @@ class LangSegment:
                 process, data = LangSegment._text_cache[segment]
                 process(words, data)
             else:
-                # 处理非标记部分，逐字符检查标点符号
                 current_word = ""
                 for char in segment:
-                    if char in ",.!?\";:":  # 常见的标点符号
+                    if char in ",.!?\";:": 
                         if current_word:
                             LangSegment._addwords(words, current_word)
                             current_word = ""
-                        words.append({"text": char})  # 标点符号作为独立词
+                        words.append({"text": char}) 
                     else:
                         current_word += char
                 if current_word:
@@ -98,7 +97,6 @@ class LangSegment:
 
     @staticmethod
     def _insert_english_uppercase(word):
-        # 保留标点符号，处理连字符、下划线和大写字母
         modified_text = re.sub(r'(?<!\b)([A-Z])', r' \1', word)
         modified_text = re.sub(r'[-_]', ' ', modified_text)
         modified_text = re.sub(r'\s+', ' ', modified_text).strip()

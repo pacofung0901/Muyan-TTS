@@ -9,17 +9,14 @@ import torch
 import pdb,traceback,numpy as np,logging
 from scipy.io import wavfile
 import librosa
-# now_dir = os.getcwd()
-# sys.path.append(now_dir)
 from sovits.utils import load_audio,clean_path
 
 from time import time as ttime
 import shutil
 
-def my_save(fea,path):#####fix issue: torch.save doesn't support chinese path
+def my_save(fea,path):
     dir=os.path.dirname(path)
     name=os.path.basename(path)
-    # tmp_path="%s/%s%s.pth"%(dir,ttime(),i_part)
     tmp_path="%s.pth"%(ttime())
     torch.save(fea,tmp_path)
     shutil.move(tmp_path,"%s/%s"%(dir,name))
@@ -32,12 +29,9 @@ def audio_hubert_embedding(input_dir="data", output_dir="data", cnhubert_base_pa
     alpha=0.5
     if torch.cuda.is_available():
         device = "cuda"
-    # elif torch.backends.mps.is_available():
-    #     device = "mps"
     else:
         device = "cpu"
     model=cnhubert.get_model()
-    # is_half=False
     if(is_half==True):
         model=model.half().to(device)
     else:
@@ -56,7 +50,7 @@ def audio_hubert_embedding(input_dir="data", output_dir="data", cnhubert_base_pa
         tmp_audio32b = (tmp_audio / tmp_max * (maxx * alpha*1145.14)) + ((1 - alpha)*1145.14) * tmp_audio
         tmp_audio = librosa.resample(
             tmp_audio32b, orig_sr=32000, target_sr=16000
-        )#不是重采样问题
+        )
         tensor_wav16 = torch.from_numpy(tmp_audio)
         if (is_half == True):
             tensor_wav16=tensor_wav16.half().to(device)
@@ -79,7 +73,6 @@ def audio_hubert_embedding(input_dir="data", output_dir="data", cnhubert_base_pa
             wav_path=wav_name
             wav_name = os.path.basename(wav_name)
             name2go(wav_name,wav_path)
-            #print(wav_path, wav_name)
         except:
             print(line,traceback.format_exc())
 

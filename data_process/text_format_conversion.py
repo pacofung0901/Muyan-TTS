@@ -16,20 +16,26 @@ def process_transcription(text):
     return text
 
 
-def generate_raw_data_list(librispeech_dir, output_dir="data", subset="train-clean-100"):
+def generate_raw_data_list(librispeech_dir, output_dir="data", subset="dev-clean"):
     """
     generate name2text.txt 
     example:
     librispeech_dir = "path_to_LibriSpeech"  # the path of librispeech
     output_dir = "data"  # output filename
-    subset = "train-clean-100"       # librispeech subset
+    subset = "dev-clean"       # librispeech subset
     """
     dataset = LIBRISPEECH(root=librispeech_dir, url=subset, download=True)
     os.makedirs(os.path.join(output_dir, "tmp" ), exist_ok=True)
     os.makedirs(os.path.join(output_dir, "tmp", "text" ), exist_ok=True)
+    specified_speaker = None
     with open(os.path.join(output_dir, "tmp", "text", "name2text.txt"), "w") as f:
         for idx, (waveform, sample_rate, transcription, speaker_id, chapter_id, utterance_id) in enumerate(dataset):
             # Construct audio file path (original .flac)
+            if specified_speaker == None:
+                # choose the first speaker as example
+                specified_speaker = str(speaker_id)
+            if str(speaker_id) != specified_speaker:
+                continue
             audio_path = os.path.join(librispeech_dir, subset, str(speaker_id), str(chapter_id), f"{speaker_id}-{chapter_id}-{utterance_id:04d}.flac")
             audio_path = os.path.basename(clean_path(audio_path))
             _, _, norm_text = clean_text(
@@ -43,6 +49,9 @@ def generate_raw_data_list(librispeech_dir, output_dir="data", subset="train-cle
     with open(os.path.join(output_dir, "tmp", "text", "raw_data.list"), "w") as f:
         for idx, (waveform, sample_rate, transcription, speaker_id, chapter_id, utterance_id) in enumerate(dataset):
             # Construct audio file path (original .flac)
+            if str(speaker_id) != specified_speaker:
+                continue
+            
             audio_path = os.path.join(librispeech_dir, subset, str(speaker_id), str(chapter_id), f"{speaker_id}-{chapter_id}-{utterance_id:04d}.flac")
             
             # Verify audio file exists

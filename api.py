@@ -11,10 +11,6 @@ from fastapi.responses import StreamingResponse
 import uvicorn
 from inference.inference import Inference
 
-# 提供 Web API 的方式来调用 TTS 模型
-# Web API 模式下，Llama 将以 vllm 的方式启动，用于加速推理过程
-
-# web server 端口号
 TTS_PORT=8020
 app = FastAPI()
 
@@ -51,27 +47,40 @@ async def get_tts(request_data: TTSRequest):
 
 
 if __name__ == "__main__":
-    from modelscope import snapshot_download
     model_type = "base"
-    model_path = "pretrained_models/Muyan-TTS"
     cnhubert_model_path = "pretrained_models/chinese-hubert-base"
+    
+    from modelscope import snapshot_download
     try:
-        snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
+        if model_type == "base":
+            model_path = "pretrained_models/Muyan-TTS"
+            snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
+        elif model_type == "sft":
+            model_path = "pretrained_models/Muyan-TTS-SFT"
+            snapshot_download('MYZY-AI/Muyan-TTS-SFT', local_dir=model_path)
+        else:
+            print(f"Invalid model type: '{model_type}'. Please specify either 'base' or 'sft'.")
         snapshot_download('pengzhendong/chinese-hubert-base', local_dir=cnhubert_model_path)
         print(f"Model downloaded successfully to {model_path}")
     except Exception as e:
         print(f"Error downloading model: {str(e)}")
-    tts = Inference(model_type, model_path, enable_vllm_acc=True)
 
     # Or you can try to install from huggingface
     # from huggingface_hub import snapshot_download
     # try:
-    #     snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
+    #     if model_type == "base":
+    #         snapshot_download('MYZY-AI/Muyan-TTS', local_dir=model_path)
+    #     elif model_type == "sft":
+    #         model_path = "pretrained_models/Muyan-TTS-SFT"
+    #         snapshot_download('MYZY-AI/Muyan-TTS-SFT', local_dir=model_path)
+    #     else:
+    #         print(f"Invalid model type: '{model_type}'. Please specify either 'base' or 'sft'.")
     #     snapshot_download('TencentGameMate/chinese-hubert-base', local_dir=cnhubert_model_path)
     #     print(f"Model downloaded successfully to {model_path}")
     # except Exception as e:
     #     print(f"Error downloading model: {str(e)}")
     
+    tts = Inference(model_type, model_path, enable_vllm_acc=True)
     uvicorn.run(app, host="0.0.0.0", port=TTS_PORT)
     
     

@@ -47,7 +47,6 @@ async def send_request_llama(model_type, prompt_text, llama_port, temperature=0.
 
 class InferenceLlamaVllm:
     def __init__(self, model_path, model_type):
-        # TODO: 需要写一个自动寻找端口的代码
         self.llama_port = self._get_available_port()
         self.model_type = model_type
         os.makedirs('logs', exist_ok=True)
@@ -59,10 +58,8 @@ class InferenceLlamaVllm:
             f"--host 0.0.0.0 --port {self.llama_port} > logs/llm.log 2>&1 & echo $! > {pid_file}"
         )
 
-        # 启动服务并捕获 PID
         subprocess.run(cmd, shell=True)
         
-        # 读取 PID
         if os.path.exists(pid_file):
             with open(pid_file, 'r') as f:
                 self.pid = int(f.read().strip())
@@ -70,12 +67,11 @@ class InferenceLlamaVllm:
             raise RuntimeError("Failed to capture PID")
 
         logging.info("initializing llama, it may take some time...")
-        # 等待服务启动
+
         self._wait_for_service(self.llama_port, timeout=300)
         logging.info(f"init llama finish in IPD:{self.pid}")
         
     def _is_port_available(self, port):
-        """检查指定端口是否可用"""
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             try:
                 s.bind(("localhost", port))
@@ -84,18 +80,15 @@ class InferenceLlamaVllm:
                 return False
 
     def _get_available_port(self, start_port=None, max_tries=10):
-        """获取可用端口"""
-        # 优先使用环境变量 LLAMA_PORT
         env_port = os.getenv('LLAMA_PORT', '8021')
         try:
             port = int(env_port)
             if self._is_port_available(port):
-                return str(port)  # 返回字符串以保持一致性
+                return str(port)  
         except ValueError:
-            pass  # 环境变量无效，忽略并继续查找
+            pass  
 
-        # 如果环境变量未设置或端口被占用，自动寻找
-        start_port = start_port or int(env_port)  # 默认从环境变量端口开始
+        start_port = start_port or int(env_port)  
         port = start_port
         for _ in range(max_tries):
             if self._is_port_available(port):
@@ -104,7 +97,6 @@ class InferenceLlamaVllm:
         raise RuntimeError(f"No available port found in range {start_port}-{start_port + max_tries - 1}")
         
     def _wait_for_service(self, port, timeout):
-        """通过 HTTP 请求检查服务是否启动"""
         start_time = time.time()
         url = f"http://localhost:{port}/health" 
         while time.time() - start_time < timeout:
@@ -133,7 +125,7 @@ class InferenceLlamaHf:
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
         self.llama = AutoModelForCausalLM.from_pretrained(
             model_path,
-            torch_dtype=torch.float16, # 不确定
+            torch_dtype=torch.float16, 
             trust_remote_code=True     
         ).to(self.device)
         
@@ -142,7 +134,6 @@ class InferenceLlamaHf:
     async def cal_tts(self, batch_prompts, temperature=0.6, repetition_penalty=1.0):
         results = []
         
-        # 定义异步生成单个提示的函数
         async def process_prompt(prompt):
             inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
             input_ids = inputs["input_ids"]
@@ -161,7 +152,6 @@ class InferenceLlamaHf:
             generated_text = self.tokenizer.decode(generated_tokens, skip_special_tokens=False)
             return generated_text
 
-        # 并行处理所有提示
         tasks = [process_prompt(prompt) for prompt in batch_prompts]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
