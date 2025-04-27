@@ -1,17 +1,22 @@
 # Muyan-TTS
 
-## Highlight
+<p align="center">
+Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp; | &nbsp;<a href="">Technical Report</a> &nbsp;&nbsp;
+</p>
 
-Muyan-TTS is a trainable TTS model designed for podcast applications within a $50,000 budget, which is pre-trained on over 100,000 hours of podcast audio data, enabling zero-shot TTS synthesis with high-quality voice generation. Furthermore, Muyan-TTS supports speaker adaptation with dozens of minutes of target speech, making it highly customizable for individual voices. Muyan-TTS makes the following four key contributions:
-- **Open-sourcing two TTS models**: (i) a base model pre-trained on diverse podcast datasets, enabling zero-shot TTS synthesis, and (ii) a supervised fine-tuned (SFT) model trained on an individual speaker to enhance TTS performance.
-- **Providing a detailed training methodology**: outline the end-to-end training procedure, from the base model to speaker-specific adaptation, and release the full training code for public use.
-- **Introducing a data processing pipeline**: propose a comprehensive workflow for data collection, preprocessing, and formatting tailored to TTS model training, improving efficiency and reproducibility.
-- **Optimizing inference efficiency**: develop an accelerated TTS inference framework, particularly optimizing the LLM component for faster and more efficient speech generation.
+Muyan-TTS is a trainable TTS model designed for podcast applications within a $50,000 budget, which is pre-trained on over 100,000 hours of podcast audio data, enabling zero-shot TTS synthesis with high-quality voice generation. Furthermore, Muyan-TTS supports speaker adaptation with dozens of minutes of target speech, making it highly customizable for individual voices.
+
+## 🔥🔥🔥 News!!
+
+* April 28, 2025: 👋 We release the zero-shot TTS model weights of [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS).
+* April 28, 2025: 👋 We release the few-shot TTS model weights of [Muyan-TTS-SFT](https://huggingface.co/MYZY-AI/Muyan-TTS-SFT), which is trained based on [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS) with dozens of minutes of a single speaker's speech.
+* We release the training code from the base model to the SFT model for speaker adaptation.
+* We release the [technical report]() of Muyan-TTS.
 
 ## Summary
 
 ![Framework](assets/framework.png)
-Framework of Muyan-TTS. Left is an LLM that models the parallel corpus of text (in purple) and audio (in green) tokens. Right is a SoVITS model that decodes the generated audio tokens, as well as phonemes and speaker embeddings, into the audio waveform.
+Framework of Muyan-TTS. Left is an LLM that models the parallel corpus of text (in blue) and audio (in green) tokens. Right is a SoVITS model that decodes the generated audio tokens, as well as phonemes and speaker embeddings, into the audio waveform.
 
 ![Pipeline](assets/pipeline.png)
 Data processing pipeline. The final dataset comprises over 100,000 hours of high-quality speech and corresponding transcriptions, forming a robust parallel corpus suitable for TTS training in long-form audio scenarios such as podcasts.
