@@ -47,6 +47,13 @@ conda activate muyan-tts
 make build
 ```
 
+You need to install ```FFmpeg```. If you're using Ubuntu, you can install it with the following command:
+```sh
+sudo apt update
+sudo apt install ffmpeg
+```
+
+
 ### Model Download 
 | Models   | Links   |
 |-------|-------|
