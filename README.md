@@ -67,7 +67,7 @@ pretrained_models
 ```
 
 ## Quickstart
-```py
+```sh
 python tts.py
 ```
 This will synthesize speech through inference. The core code is as follows:
@@ -89,7 +89,7 @@ We need to specify the ```prompt speech```, its ```prompt text```, and the ```te
 Additionally, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```.
 
 ## API Usage
-```py
+```sh
 python api.py
 ```
 Using the API mode automatically enables VLLM acceleration, and the above command will start a service on the default port ```8020```. Additionally, LLM logs will be saved in ```logs/llm.log```.
