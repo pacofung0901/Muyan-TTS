@@ -3,7 +3,7 @@
 <p>
 
 <p align="center">
-Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp; | &nbsp;<a href="">Technical Report</a> &nbsp;&nbsp;
+Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS"><img src="assets/modelscope-color.svg" alt="ModelScope" style="height:20px; vertical-align:middle;"></img></a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT"><img src="assets/modelscope-color.svg" alt="ModelScope" style="height:20px; vertical-align:middle;"></img></a>&nbsp; | &nbsp;<a href="">Technical Report</a> &nbsp;&nbsp;
 </p>
 
 Muyan-TTS is a trainable TTS model designed for podcast applications within a $50,000 budget, which is pre-trained on over 100,000 hours of podcast audio data, enabling zero-shot TTS synthesis with high-quality voice generation. Furthermore, Muyan-TTS supports speaker adaptation with dozens of minutes of target speech, making it highly customizable for individual voices.
