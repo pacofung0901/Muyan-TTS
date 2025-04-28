@@ -19,10 +19,6 @@ cp "$LLAMA_DATA_DIR/dataset_info.json" "$DATA_DIR"
 echo "Updating dataset info..."
 python "$TRAINING_DIR/update_dataset_info.py"
 
-# Prepare base model
-echo "Preparing base model..."
-python "$TRAINING_DIR/prepare_base_model.py"
-
 # Start training
 echo "Starting training..."
 llamafactory-cli train "$TRAINING_DIR/sft.yaml"
