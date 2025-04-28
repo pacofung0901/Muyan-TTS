@@ -27,7 +27,7 @@ def generate_raw_data_list(librispeech_dir, output_dir="data", subset="dev-clean
     dataset = LIBRISPEECH(root=librispeech_dir, url=subset, download=True)
     os.makedirs(os.path.join(output_dir, "tmp" ), exist_ok=True)
     os.makedirs(os.path.join(output_dir, "tmp", "text" ), exist_ok=True)
-    specified_speaker = None
+    specified_speaker = "3752"
     with open(os.path.join(output_dir, "tmp", "text", "name2text.txt"), "w") as f:
         for idx, (waveform, sample_rate, transcription, speaker_id, chapter_id, utterance_id) in enumerate(dataset):
             # Construct audio file path (original .flac)

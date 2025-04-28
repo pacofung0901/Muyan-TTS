@@ -88,13 +88,13 @@ async def main(model_type, model_path):
         f.write(next(wavs))  
     print(f"Speech generated in {output_path}")
 ```
-You need to specify the ```prompt speech```, including the ```ref_wav_path``` and its ```prompt text```, and the ```text``` to be synthesized. The synthesized speech is saved by default to ```logs/tts.wav```.
+You need to specify the prompt speech, including the ```ref_wav_path``` and its ```prompt_text```, and the ```text``` to be synthesized. The synthesized speech is saved by default to ```logs/tts.wav```.
 
 Additionally, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```.
 
-When you specify the ```model_type``` to be ```base```, you can change the ```prompt speech``` to arbitrary speaker for zero-shot TTS synthesis.
+When you specify the ```model_type``` to be ```base```, you can change the prompt speech to arbitrary speaker for zero-shot TTS synthesis.
 
-When you specify the ```model_type``` to be ```sft```, you need to keep the ```prompt speech``` unchanged because the ```sft``` model is trained on Claire's voice.
+When you specify the ```model_type``` to be ```sft```, you need to keep the prompt speech unchanged because the ```sft``` model is trained on Claire's voice.
 
 ## API Usage
 ```sh
@@ -125,7 +125,7 @@ print(time.time() - start)
 
 By default, the synthesized speech will be saved at ```logs/tts.wav```.
 
-Additionally, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```.
+Similarly, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```.
 
 ## Training
 
@@ -133,11 +133,17 @@ We use ```LibriSpeech``` as an example. You can use your own dataset instead, bu
 
 If you haven't downloaded ```LibriSpeech``` yet, you can download the dev-clean set using:
 ```sh
-wget https://www.openslr.org/resources/12/dev-clean.tar.gz -P path/to/save
+wget --no-check-certificate https://www.openslr.org/resources/12/dev-clean.tar.gz
 ```
-After downloading, specify the ```librispeech_dir``` in ```prepare_sft_dataset.py``` to match the download location. Then run ```./train.sh```, which will automatically process the data and generate ```data/tts_sft_data.json```. We will use the first speaker from the LibriSpeech subset for fine-tuning. You can also specify a different speaker as needed in ```data_process/text_format_conversion.py```.
+After uncompressing the data, specify the ```librispeech_dir``` in ```prepare_sft_dataset.py``` to match the download location. Then run:
+```sh
+./train.sh
+```
+This will automatically process the data and generate ```data/tts_sft_data.json```.
 
-Note that if an error occurs during the process, resolve the error, delete the existing contents of the data folder, and then rerun ```train.sh```.
+Note that we use a specific speaker of "3752" (which can be specified in ```data_process/text_format_conversion.py```) from dev-clean of LibriSpeech as an example because its data size is relatively large. If you organize your own dataset for training, please prepare at least a dozen of minutes of speech from the target speaker.
+
+If an error occurs during the process, resolve the error, delete the existing contents of the data folder, and then rerun ```train.sh```.
 
 After generating ```data/tts_sft_data.json```, train.sh will automatically copy it to ```llama-factory/data``` and add the following field to ```dataset_info.json```:
 ```json
@@ -147,7 +153,12 @@ After generating ```data/tts_sft_data.json```, train.sh will automatically copy 
 ```
 Finally, it will automatically execute the ```llamafactory-cli train``` command to start training. You can adjust training settings using ```training/sft.yaml```. By default, the trained weights will be saved to ```pretrained_models/Muyan-TTS-new-SFT```.
 
-You can directly deploy your trained model using the API tool above. During inference, you need to specify the ```model_type``` to be ```sft``` and replace the ```ref_wav_path``` and ```prompt text``` with a sample of the speaker's voice you trained on.
+After training, you need to copy the ```sovits.pth``` of base/sft model to your trained model path before inference:
+```sh
+cp pretrained_models/Muyan-TTS/sovits.pth pretrained_models/Muyan-TTS-new-SFT
+```
+
+You can directly deploy your trained model using the API tool above. During inference, you need to specify the ```model_type``` to be ```sft``` and replace the ```ref_wav_path``` and ```prompt_text``` with a sample of the speaker's voice you trained on.
 
 ## Acknowledgment
 
