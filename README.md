@@ -47,18 +47,30 @@ conda activate muyan-tts
 make build
 ```
 
-Model Download (optional)
+Model Download 
 | Models   | Links   |
 |-------|-------|
 | Muyan-TTS   | [huggingface](https://huggingface.co/MYZY-AI/Muyan-TTS) \| [modelscope](https://modelscope.cn/models/MYZY-AI/Muyan-TTS)   |
 | Muyan-TTS-SFT   | [huggingface](https://huggingface.co/MYZY-AI/Muyan-TTS-SFT) \| [modelscope](https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT)   |
 
+You can download the ```Muyan-TTS``` or ```Muyan-TTS-SFT``` models from ```HuggingFace``` or ```ModelScope```.
+You need to additionally download the weights for ```chinese-hubert-base``` from:
+
+```https://huggingface.co/TencentGameMate/chinese-hubert-base```.
+
+Place all the downloaded models in the ```pretrained_models``` directory. Your directory structure should look similar to the following:
+```
+pretrained_models
+├── chinese-hubert-base
+├── Muyan-TTS
+└── Muyan-TTS-SFT
+```
 
 ## Quickstart
 ```py
 python tts.py
 ```
-This will automatically download the ```Muyan-TTS model``` (if not already downloaded) and synthesize speech through inference. The core code is as follows:
+This will synthesize speech through inference. The core code is as follows:
 ```py
 async def main(model_type, model_path):
     tts = Inference(model_type, model_path, enable_vllm_acc=False)
@@ -113,9 +125,9 @@ We use ```LibriSpeech``` as an example. You can use your own dataset instead, bu
 
 If you haven't downloaded ```LibriSpeech``` yet, you can download the dev-clean set using:
 ```sh
-wget https://www.openslr.org/resources/12/dev-clean.tar.gz -P /path/to/save
+wget https://www.openslr.org/resources/12/dev-clean.tar.gz -P path/to/save
 ```
-After downloading, specify the ```librispeech_dir``` in ```prepare_sft_dataset.py``` to match the download location. Then run ```./train.sh```, which will automatically process the data and generate ```data/tts_sft_data.json```.
+After downloading, specify the ```librispeech_dir``` in ```prepare_sft_dataset.py``` to match the download location. Then run ```./train.sh```, which will automatically process the data and generate ```data/tts_sft_data.json```. We will use the first speaker from the LibriSpeech subset for fine-tuning. You can also specify a different speaker as needed in ```data_process/text_format_conversion.py```.
 
 Note that if an error occurs during the process, resolve the error, delete the existing contents of the data folder, and then rerun ```train.sh```.
 
@@ -127,7 +139,7 @@ After generating ```data/tts_sft_data.json```, train.sh will automatically copy 
 ```
 Finally, it will automatically execute the ```llamafactory-cli train``` command to start training. You can adjust training settings using ```training/sft.yaml```. By default, the trained weights will be saved to ```pretrained_models/Muyan-TTS-new-SFT```.
 
-The SFT model requires the ```model_type``` to be set to ```sft```.
+The SFT model requires the ```model_type``` to be set to ```sft```. During inference, you need to replace the ```prompt speech``` and ```prompt text``` with the corresponding ```prompt speech``` and ```prompt text``` of the speaker used during training.
 
 ## Acknowledgment
 
