@@ -3,17 +3,17 @@
 <p>
 
 <p align="center">
-Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS">🤖</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT">🤖</a>&nbsp; | &nbsp;<a href="">Technical Report</a> &nbsp;&nbsp;
+Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS">🤖</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT">🤖</a>&nbsp; | &nbsp;<a href="https://arxiv.org/abs/2504.19146">Technical Report</a> &nbsp;&nbsp;
 </p>
 
 Muyan-TTS is a trainable TTS model designed for podcast applications within a $50,000 budget, which is pre-trained on over 100,000 hours of podcast audio data, enabling zero-shot TTS synthesis with high-quality voice generation. Furthermore, Muyan-TTS supports speaker adaptation with dozens of minutes of target speech, making it highly customizable for individual voices.
 
 ## 🔥🔥🔥 News!!
 
-* April 28, 2025: 👋 We release the zero-shot TTS model weights of [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS).
-* April 28, 2025: 👋 We release the few-shot TTS model weights of [Muyan-TTS-SFT](https://huggingface.co/MYZY-AI/Muyan-TTS-SFT), which is trained based on [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS) with dozens of minutes of a single speaker's speech.
-* April 28, 2025: 👋 We release the training code from the base model to the SFT model for speaker adaptation.
-* April 28, 2025: 👋 We release the [technical report]() of Muyan-TTS.
+* April 29, 2025: 👋 We release the zero-shot TTS model weights of [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS).
+* April 29, 2025: 👋 We release the few-shot TTS model weights of [Muyan-TTS-SFT](https://huggingface.co/MYZY-AI/Muyan-TTS-SFT), which is trained based on [Muyan-TTS](https://huggingface.co/MYZY-AI/Muyan-TTS) with dozens of minutes of a single speaker's speech.
+* April 29, 2025: 👋 We release the training code from the base model to the SFT model for speaker adaptation.
+* April 29, 2025: 👋 We release the [technical report](https://arxiv.org/abs/2504.19146) of Muyan-TTS.
 
 ## Summary
 
@@ -141,7 +141,7 @@ After uncompressing the data, specify the ```librispeech_dir``` in ```prepare_sf
 ```
 This will automatically process the data and generate ```data/tts_sft_data.json```.
 
-Note that we use a specific speaker of "3752" (which can be specified in ```data_process/text_format_conversion.py```) from dev-clean of LibriSpeech as an example because its data size is relatively large. If you organize your own dataset for training, please prepare at least a dozen of minutes of speech from the target speaker.
+Note that we use a specific speaker ID of "3752" from dev-clean of LibriSpeech (which can be specified in ```data_process/text_format_conversion.py```) as an example because its data size is relatively large. If you organize your own dataset for training, please prepare at least a dozen of minutes of speech from the target speaker.
 
 If an error occurs during the process, resolve the error, delete the existing contents of the data folder, and then rerun ```train.sh```.
 
@@ -151,7 +151,9 @@ After generating ```data/tts_sft_data.json```, train.sh will automatically copy 
     "file_name": "tts_sft_data.json"
 }
 ```
-Finally, it will automatically execute the ```llamafactory-cli train``` command to start training. You can adjust training settings using ```training/sft.yaml```. By default, the trained weights will be saved to ```pretrained_models/Muyan-TTS-new-SFT```.
+Finally, it will automatically execute the ```llamafactory-cli train``` command to start training. You can adjust training settings using ```training/sft.yaml```.
+
+By default, the trained weights will be saved to ```pretrained_models/Muyan-TTS-new-SFT```.
 
 After training, you need to copy the ```sovits.pth``` of base/sft model to your trained model path before inference:
 ```sh
