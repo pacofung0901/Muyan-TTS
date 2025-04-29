@@ -7,6 +7,9 @@
 Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS">🤖</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT">🤖</a>&nbsp; | &nbsp;<a href="https://arxiv.org/abs/2504.19146">Technical Report</a> &nbsp;&nbsp;
 </p>
 <p>
+    <a href="https://discord.gg/zT52KG6WbD">
+       <img src="https://dcbadge.limes.pink/api/server/zT52KG6WbD?style=flat">
+    </a>
     <a href="https://github.com/MYZY-AI/Muyan-TTS/issues/1">
        <img src="https://img.shields.io/badge/群聊-WeChat-green">
     </a>
@@ -168,12 +171,6 @@ cp pretrained_models/Muyan-TTS/sovits.pth pretrained_models/Muyan-TTS-new-SFT
 ```
 
 You can directly deploy your trained model using the API tool above. During inference, you need to specify the ```model_type``` to be ```sft``` and replace the ```ref_wav_path``` and ```prompt_text``` with a sample of the speaker's voice you trained on.
-
-## Discussion & Communication
-
-You can directly discuss on the [Github Issues](https://github.com/MYZY-AI/Muyan-TTS/issues) or scan the QR code below to join our communication group.
-
-<img src="./assets/qr.png" width="250px">
 
 ## Acknowledgment
 
