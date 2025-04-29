@@ -162,6 +162,12 @@ cp pretrained_models/Muyan-TTS/sovits.pth pretrained_models/Muyan-TTS-new-SFT
 
 You can directly deploy your trained model using the API tool above. During inference, you need to specify the ```model_type``` to be ```sft``` and replace the ```ref_wav_path``` and ```prompt_text``` with a sample of the speaker's voice you trained on.
 
+## Discussion & Communication
+
+You can directly discuss on the [Github Issues](https://github.com/MYZY-AI/Muyan-TTS/issues) or scan the QR code below to join our communication group.
+
+<img src="./assets/qr.png" width="250px">
+
 ## Acknowledgment
 
 The model is trained base on [Llama-3.2-3B](https://huggingface.co/meta-llama/Llama-3.2-3B).
