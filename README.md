@@ -112,6 +112,8 @@ python api.py
 ```
 Using the API mode automatically enables vLLM acceleration, and the above command will start a service on the default port ```8020```. Additionally, LLM logs will be saved in ```logs/llm.log```.
 
+Similarly, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```. Note that the ```model_path``` should be consistent with your specified ```model_type```.
+
 You can send a request to the API using the example below:
 ```py
 import time
@@ -120,7 +122,9 @@ TTS_PORT=8020
 payload = {
     "ref_wav_path": "assets/Claire.wav",
     "prompt_text": "Although the campaign was not a complete success, it did provide Napoleon with valuable experience and prestige.",
-    "text": "Welcome to the captivating world of podcasts, let's embark on this exciting journey together."
+    "text": "Welcome to the captivating world of podcasts, let's embark on this exciting journey together.",
+    "temperature": 1.0,
+    "speed": 1.0,
 }
 start = time.time()
 
@@ -134,8 +138,6 @@ print(time.time() - start)
 ```
 
 By default, the synthesized speech will be saved at ```logs/tts.wav```.
-
-Similarly, you need to specify ```model_type``` as either ```base``` or ```sft```, with the default being ```base```.
 
 ## Training
 
