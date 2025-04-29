@@ -24,7 +24,7 @@ def generate_raw_data_list(librispeech_dir, output_dir="data", subset="dev-clean
     output_dir = "data"  # output filename
     subset = "dev-clean"       # librispeech subset
     """
-    dataset = LIBRISPEECH(root=librispeech_dir, url=subset, download=False)
+    dataset = LIBRISPEECH(root=librispeech_dir, url=subset, download=True)
     os.makedirs(os.path.join(output_dir, "tmp" ), exist_ok=True)
     os.makedirs(os.path.join(output_dir, "tmp", "text" ), exist_ok=True)
     specified_speaker = "3752"
