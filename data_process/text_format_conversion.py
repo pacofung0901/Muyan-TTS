@@ -24,7 +24,7 @@ def generate_raw_data_list(librispeech_dir, output_dir="data", subset="dev-clean
     output_dir = "data"  # output filename
     subset = "dev-clean"       # librispeech subset
     """
-    dataset = LIBRISPEECH(root=librispeech_dir, url=subset, download=True)
+    dataset = LIBRISPEECH(root=librispeech_dir, url=subset, download=False)
     os.makedirs(os.path.join(output_dir, "tmp" ), exist_ok=True)
     os.makedirs(os.path.join(output_dir, "tmp", "text" ), exist_ok=True)
     specified_speaker = "3752"
@@ -52,7 +52,7 @@ def generate_raw_data_list(librispeech_dir, output_dir="data", subset="dev-clean
             if str(speaker_id) != specified_speaker:
                 continue
             
-            audio_path = os.path.join(librispeech_dir, subset, str(speaker_id), str(chapter_id), f"{speaker_id}-{chapter_id}-{utterance_id:04d}.flac")
+            audio_path = os.path.join(librispeech_dir, "LibriSpeech", subset, str(speaker_id), str(chapter_id), f"{speaker_id}-{chapter_id}-{utterance_id:04d}.flac")
             
             # Verify audio file exists
             if not os.path.exists(audio_path):
