@@ -147,7 +147,7 @@ If you haven't downloaded ```LibriSpeech``` yet, you can download the dev-clean 
 ```sh
 wget --no-check-certificate https://www.openslr.org/resources/12/dev-clean.tar.gz
 ```
-After uncompressing the data, specify the ```librispeech_dir``` in ```prepare_sft_dataset.py``` to match the download location. Then run:
+After uncompressing the data, specify the ```librispeech_dir``` in ```prepare_sft_dataset.py``` to be the parent folder of your ```LibriSpeech``` path. Then run:
 ```sh
 ./train.sh
 ```
