@@ -27,18 +27,32 @@ Muyan-TTS is a trainable TTS model designed for podcast applications within a $5
 
 ## Summary
 
+### Framework
 ![Framework](assets/framework.png)
 Framework of Muyan-TTS. Left is an LLM that models the parallel corpus of text (in blue) and audio (in green) tokens. Right is a SoVITS model that decodes the generated audio tokens, as well as phonemes and speaker embeddings, into the audio waveform.
 
+### Data
 ![Pipeline](assets/pipeline.png)
 Data processing pipeline. The final dataset comprises over 100,000 hours of high-quality speech and corresponding transcriptions, forming a robust parallel corpus suitable for TTS training in long-form audio scenarios such as podcasts.
 
+### Training costs
 | Training Cost   | Data Processing   | Pre-training of LLM| Training of Decoder | Total |
 |-------|-------|-------|-------|-------|
 | in GPU Hours   | 60K(A10)   | 19.2K(A100)| 1.34K(A100) | - |
 | in USD   | $30K   | $19.2K| $1.34K | $50.54K |
 
 Training costs of Muyan-TTS, assuming the rental price of A10 and A100 in GPU hour is $0.5 and $1, respectively.
+
+### Synthesis speed
+We denote ```r``` as the inference time needed to generate one second of audio and compare the synthesis speed with several open-source TTS models.
+
+| Model   | CosyVoice2   | Step-Audio| Spark-TTS | FireRedTTS |  GPT-SoVITS v3|  Muyan-TTS |
+|-------|-------|-------|-------|-------|-------|-------|
+| r &#8595;   | 2.19   | 0.90| 1.31 | 0.61 | 0.48 | 0.33 |
+
+All the inference process ran on a single NVIDIA A100 (40G, PCIe) GPU, and the baseline models were evaluated using their official inference implementations.
+
+*Note*: Muyan-TTS only supports English input since the training data is heavily skewed toward English.
 
 ## Demo
 
