@@ -4,7 +4,7 @@
 <p>
 
 <p align="center">
-Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS">🤖</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT">🤖</a>&nbsp; | &nbsp;<a href="https://arxiv.org/abs/2504.19146">Technical Report</a> &nbsp;&nbsp;
+Muyan-TTS <a href="https://huggingface.co/MYZY-AI/Muyan-TTS">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS">🤖</a>&nbsp;<a href="https://wisemodel.cn/models/MYZY-AI/Muyan-TTS">🦉</a>&nbsp; | Muyan-TTS-SFT <a href="https://huggingface.co/MYZY-AI/Muyan-TTS-SFT">🤗</a>&nbsp;<a href="https://modelscope.cn/models/MYZY-AI/Muyan-TTS-SFT">🤖</a>&nbsp;<a href="https://wisemodel.cn/models/MYZY-AI/Muyan-TTS-SFT">🦉</a>&nbsp; | &nbsp;<a href="https://arxiv.org/abs/2504.19146">Technical Report</a> &nbsp;&nbsp;
 </p>
 <p>
     <a href="https://discord.gg/zT52KG6WbD">
