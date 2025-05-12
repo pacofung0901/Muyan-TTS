@@ -1,5 +1,6 @@
 from inference.inference import Inference
 import asyncio
+import os
 
 async def main(model_type, model_path):
     tts = Inference(model_type, model_path, enable_vllm_acc=False)
@@ -9,6 +10,7 @@ async def main(model_type, model_path):
         text="Welcome to the captivating world of podcasts, let's embark on this exciting journey together."
     )
     output_path = "logs/tts.wav"
+    os.makedirs("logs", exist_ok=True)
     with open(output_path, "wb") as f:
         f.write(next(wavs))  
     print(f"Speech generated in {output_path}")
