@@ -195,3 +195,13 @@ The model is trained base on [Llama-3.2-3B](https://huggingface.co/meta-llama/Ll
 We borrow a lot of code from [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
 
 We borrow a lot of code from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
+
+## Citation
+```
+@article{li2025muyan,
+  title={Muyan-TTS: A Trainable Text-to-Speech Model Optimized for Podcast Scenarios with a $50 K Budget},
+  author={Li, Xin and Jia, Kaikai and Sun, Hao and Dai, Jun and Jiang, Ziyang},
+  journal={arXiv preprint arXiv:2504.19146},
+  year={2025}
+}
+```
