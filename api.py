@@ -19,7 +19,7 @@ class TTSRequest(BaseModel):
     ref_wav_path: str
     prompt_text: str
     text: str
-    temperature: Optional[float]=0.6
+    temperature: Optional[float]=1.0
     repetition_penalty: Optional[float]=1.0
     speed: Optional[float]=1.0
     scaling_factor: Optional[float]=1.0

@@ -137,7 +137,7 @@ payload = {
     "ref_wav_path": "assets/Claire.wav",
     "prompt_text": "Although the campaign was not a complete success, it did provide Napoleon with valuable experience and prestige.",
     "text": "Welcome to the captivating world of podcasts, let's embark on this exciting journey together.",
-    "temperature": 0.6,
+    "temperature": 1.0,
     "speed": 1.0,
 }
 start = time.time()

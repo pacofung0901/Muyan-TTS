@@ -59,7 +59,7 @@ class Inference():
             
         return batch_prompts
         
-    async def generate(self, ref_wav_path, prompt_text, text, temperature=0.6, 
+    async def generate(self, ref_wav_path, prompt_text, text, temperature=1.0, 
                  repetition_penalty=1.0, cut_punc=None,
                  speed=1.0, scaling_factor=1.0):
         batch_prompts = self._process_prompt(ref_wav_path, prompt_text, text)

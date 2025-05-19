@@ -8,11 +8,25 @@ from openai import AsyncOpenAI
 import asyncio
 import logging
 import socket
+from transformers import StoppingCriteria, StoppingCriteriaList
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
+class EosReachedCriteria(StoppingCriteria):
+    def __init__(self, stop_token_ids_list: list[list[int]]):
+        self.stop_token_ids_list = stop_token_ids_list
 
-async def send_request_llama(model_type, prompt_text, llama_port, temperature=0.6, repetition_penalty=1.0):
+    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
+        for batch_idx in range(input_ids.shape[0]):
+            current_sequence = input_ids[batch_idx]
+            for stop_ids in self.stop_token_ids_list:
+                if len(current_sequence) >= len(stop_ids):
+                    if torch.equal(current_sequence[-len(stop_ids):], torch.tensor(stop_ids, device=current_sequence.device, dtype=current_sequence.dtype)):
+                        return True 
+        return False
+    
+
+async def send_request_llama(model_type, prompt_text, llama_port, temperature=1.0, repetition_penalty=1.0):
     # Call the OpenAI ChatCompletion endpoint asynchronously
     url_chat = f"http://localhost:{llama_port}/v1"
     client = AsyncOpenAI(api_key="EMPTY", base_url=url_chat)
@@ -131,8 +145,12 @@ class InferenceLlamaHf:
         
         self.model_type = model_type
         
-    async def cal_tts(self, batch_prompts, temperature=0.6, repetition_penalty=1.0):
+    async def cal_tts(self, batch_prompts, temperature=1.0, repetition_penalty=1.0):
         results = []
+        stop_sequences_str = ["<|audio_token_end|>", "<|end_header_id|>", "<|end_of_text|>"]
+        stop_token_ids_list = [self.tokenizer.encode(seq_str, add_special_tokens=False) for seq_str in stop_sequences_str]
+        custom_stopping_criteria = EosReachedCriteria(stop_token_ids_list=stop_token_ids_list)
+        stopping_criteria_list = StoppingCriteriaList([custom_stopping_criteria])
         
         async def process_prompt(prompt):
             inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
@@ -143,9 +161,10 @@ class InferenceLlamaHf:
                 outputs = await asyncio.to_thread(
                     self.llama.generate,
                     **inputs,
-                    max_length=512,
+                    max_length=1024,
                     temperature=temperature,
-                    repetition_penalty=repetition_penalty
+                    repetition_penalty=repetition_penalty,
+                    stopping_criteria=stopping_criteria_list
                 )
             
             generated_tokens = outputs[0][input_length:]
