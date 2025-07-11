@@ -48,6 +48,8 @@ class Inference():
         audio_tokens = self.sovits_processor.generate_audio_token(ref_wav_path)
         prompt_text = get_normed_text(prompt_text, 'en', 'v1')
         text = get_normed_text(text, 'en', 'v1')
+        print(f"prompt_text: {prompt_text}")
+        print(f"text: {text}")
         
         # Used to handle overly long sentences by splitting them into multiple shorter sentences
         batch_texts = clean_and_split_text(text)
@@ -63,8 +65,9 @@ class Inference():
                  repetition_penalty=1.0, cut_punc=None,
                  speed=1.0, scaling_factor=1.0):
         batch_prompts = self._process_prompt(ref_wav_path, prompt_text, text)
+        # print(f"batch_prompts: {batch_prompts}")
         
-        results = await self.llama.cal_tts(batch_prompts, temperature, repetition_penalty)
+        results = await self.llama.cal_tts(batch_prompts, temperature, repetition_penalty) # target token
         pred_semantic = "".join(results)
         wavs = self.sovits_processor.handle(pred_semantic, ref_wav_path, prompt_text, 'en', text, 'en', cut_punc, speed, [], scaling_factor)
         return wavs

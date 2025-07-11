@@ -127,12 +127,12 @@ class Processor:
                 wav16k = wav16k.to(self.device)
                 zero_wav_torch = zero_wav_torch.to(self.device)
             wav16k = torch.cat([wav16k, zero_wav_torch])
-            ssl_content = self.ssl_model.model(wav16k.unsqueeze(0))[
+            ssl_content = self.ssl_model.model(wav16k.unsqueeze(0))[ # cnhubert
                 "last_hidden_state"
             ].transpose(
                 1, 2
             )  
-            codes = vq_model.extract_latent(ssl_content)
+            codes = vq_model.extract_latent(ssl_content) # quantizer from sovits
             prompt_semantic = codes[0, 0]
             prompt = prompt_semantic.unsqueeze(0).to(self.device)
             
@@ -167,6 +167,7 @@ class Processor:
         sovits = Sovits(vq_model, hps)
         return sovits
 
+    # part of generate waveform
     def get_tts_wav(self, predict, vits_wav_path, prompt_text, prompt_language, text, text_language, speed=1, inp_refs=[], spk="default", scaling_factor=1.0):
         infer_sovits = self.speaker_list[spk].sovits
         vq_model = infer_sovits.vq_model
@@ -200,14 +201,16 @@ class Processor:
 
             audio_opt = []
             if (text[-1] not in splits): text += "。" if text_language != "en" else "."
-            phones2, _, _ = get_phone(text, text_language, version)
+            phones2, _, _ = get_phone(text, text_language, version) # now1
             pred_token = []
+            # print(f"predict: {predict}")
             for item in re.findall(r"<\|.+?\|>", predict):
                 if item == "<|eot_id|>" or item == "<|audio_token_end|>":
                     continue
                 pred_token.append(int(item.split("_")[-1].split("|>")[0]))
+            # print(f"pred_token: {pred_token}")
             pred_semantic = torch.LongTensor(pred_token).to(self.device).unsqueeze(0).unsqueeze(0)
-            audio = vq_model.decode(pred_semantic, torch.LongTensor(phones2).to(self.device).unsqueeze(0),
+            audio = vq_model.decode(pred_semantic, torch.LongTensor(phones2).to(self.device).unsqueeze(0), # token to audio
                                 refers,speed=speed).detach().cpu().numpy()[0, 0]
             max_audio=np.abs(audio).max()
             if max_audio>1:

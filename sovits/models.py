@@ -177,7 +177,7 @@ class DurationPredictor(nn.Module):
         x = self.proj(x * x_mask)
         return x * x_mask
 
-
+# from GPT-SoVITS (modufy from vits)
 class TextEncoder(nn.Module):
     def __init__(
         self,
@@ -411,7 +411,7 @@ class WNEncoder(nn.Module):
         out = self.norm(out)
         return out
 
-
+# same as vits (HiFi-GAN V1)
 class Generator(torch.nn.Module):
     def __init__(
         self,
@@ -1006,14 +1006,17 @@ class SynthesizerTrn(nn.Module):
         y_lengths = torch.LongTensor([codes.size(2) * 2]).to(codes.device)
         text_lengths = torch.LongTensor([text.size(-1)]).to(text.device)
 
-        quantized = self.quantizer.decode(codes)
+        quantized = self.quantizer.decode(codes) # [1, 1, 313] -> [1, 768, 313]
         if self.semantic_frame_rate == "25hz":
             quantized = F.interpolate(
                 quantized, size=int(quantized.shape[-1] * 2), mode="nearest"
             )
-        x, m_p, logs_p, y_mask = self.enc_p(
+        # from sovits (modify to add text information)
+        x, m_p, logs_p, y_mask = self.enc_p( 
             quantized, y_lengths, text, text_lengths, ge,speed
         ) 
+
+        # same as vits
         z_p = m_p + torch.randn_like(m_p) * torch.exp(logs_p) * noise_scale
 
         z = self.flow(z_p, y_mask, g=ge, reverse=True)

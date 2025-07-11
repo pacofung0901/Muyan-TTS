@@ -154,11 +154,12 @@ class InferenceLlamaHf:
         
         async def process_prompt(prompt):
             inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
+            # print(f"inputs: {inputs}")
             input_ids = inputs["input_ids"]
             input_length = input_ids.shape[1]
             
             with torch.no_grad():
-                outputs = await asyncio.to_thread(
+                outputs = await asyncio.to_thread( # llm AR part
                     self.llama.generate,
                     **inputs,
                     max_length=1024,
@@ -169,6 +170,7 @@ class InferenceLlamaHf:
             
             generated_tokens = outputs[0][input_length:]
             generated_text = self.tokenizer.decode(generated_tokens, skip_special_tokens=False)
+            # print(f"generated_text: {generated_text}")
             return generated_text
 
         tasks = [process_prompt(prompt) for prompt in batch_prompts]

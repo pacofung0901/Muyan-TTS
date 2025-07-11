@@ -205,3 +205,9 @@ We borrow a lot of code from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Fa
   year={2025}
 }
 ```
+
+
+## Remark
+10/07/2025
+1. install torch gpu version
+pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu118

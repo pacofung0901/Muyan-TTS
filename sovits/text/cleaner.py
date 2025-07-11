@@ -34,6 +34,8 @@ def clean_text(text, language, version=None):
         assert len(norm_text) == len(word2ph)
     elif language == "en":
         phones = language_module.g2p(norm_text)
+        # print(f"norm_text: {norm_text}")
+        # print(f"phones: {phones}")
         if len(phones) < 4:
             phones = [','] + phones
         word2ph = None
